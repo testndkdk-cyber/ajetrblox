@@ -242,19 +242,6 @@
             font-weight: 600;
         }
 
-        .flights-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .flights-title {
-            font-size: 20px;
-            color: #0d4a8f;
-            font-weight: 600;
-        }
-
         .section-label {
             background: #0d4a8f;
             color: white;
@@ -277,6 +264,11 @@
         .flight-card:hover {
             border-color: #1e88e5;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .flight-card.selected {
+            border-color: #1e88e5;
+            background: #e3f2fd;
         }
 
         .flight-info-row {
@@ -334,8 +326,8 @@
         }
 
         .status-badge {
-            background: #f5f5f5;
-            color: #999;
+            background: #4caf50;
+            color: white;
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 13px;
@@ -358,19 +350,211 @@
             color: #666;
         }
 
-        .connecting-section {
-            margin-top: 40px;
+        .class-selection {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: none;
+            margin-top: 30px;
         }
 
-        .transfer-badge {
-            background: #fff3e0;
-            color: #f57c00;
-            padding: 4px 12px;
+        .class-selection.active {
+            display: block;
+        }
+
+        .class-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .class-card {
+            border: 3px solid #e0e0e0;
             border-radius: 12px;
-            font-size: 12px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .class-card:hover {
+            border-color: #1e88e5;
+            transform: translateY(-3px);
+        }
+
+        .class-card.selected {
+            border-color: #1e88e5;
+            background: #e3f2fd;
+        }
+
+        .class-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0d4a8f;
+            margin-bottom: 15px;
+        }
+
+        .class-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e88e5;
+            margin-bottom: 20px;
+        }
+
+        .class-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .class-features li {
+            padding: 8px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .class-features li:before {
+            content: "✓ ";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .passenger-info {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: none;
+            margin-top: 30px;
+        }
+
+        .passenger-info.active {
+            display: block;
+        }
+
+        .continue-btn {
+            background: #0d4a8f;
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
             font-weight: 600;
-            display: inline-block;
-            margin-bottom: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .continue-btn:hover {
+            background: #1565c0;
+            transform: translateY(-1px);
+        }
+
+        .booking-summary {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 18px;
+            color: #0d4a8f;
+        }
+
+        .confirmation {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .confirmation.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-details {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .detail-value {
+            color: #0d4a8f;
+            font-weight: 600;
+        }
+
+        .download-btn {
+            background: #4caf50;
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+
+        .skip-btn {
+            background: #999;
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .skip-btn:hover {
+            background: #777;
         }
 
         @media (max-width: 1024px) {
@@ -387,12 +571,8 @@
                 gap: 15px;
             }
 
-            .flight-time,
-            .flight-duration,
-            .flight-type,
-            .flight-status,
-            .flight-price {
-                text-align: left;
+            .class-cards {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -403,53 +583,54 @@
             <div class="logo">AJet</div>
             <div class="header-actions">
                 <button class="lang-btn" onclick="toggleLanguage()">
-                    <span id="langText">🌐 EN ▼</span>
+                    <span id="langText">🌐 TR ▼</span>
                 </button>
                 <button class="login-btn">
-                    <span id="loginText">Login →</span>
+                    <span id="loginText">Giriş Yap →</span>
                 </button>
             </div>
         </div>
     </div>
 
     <div class="container">
+        <!-- Search Section -->
         <div class="search-section" id="searchSection">
-            <h1 class="search-title" id="searchTitle">Book Your Flight</h1>
+            <h1 class="search-title" id="searchTitle">Uçuşunuzu Rezerve Edin</h1>
             <div class="search-form">
                 <div class="form-group">
-                    <label id="fromLabel">FROM</label>
+                    <label id="fromLabel">NEREDEN</label>
                     <select id="fromAirport">
-                        <option value="">Select departure</option>
-                        <optgroup label="Germany">
+                        <option value="">Kalkış havalimanını seçin</option>
+                        <optgroup label="Almanya">
                             <option value="FRA">Frankfurt (FRA)</option>
-                            <option value="MUC">Munich (MUC)</option>
+                            <option value="MUC">Münih (MUC)</option>
                             <option value="BER">Berlin (BER)</option>
                             <option value="DUS">Düsseldorf (DUS)</option>
                             <option value="HAM">Hamburg (HAM)</option>
-                            <option value="CGN">Cologne (CGN)</option>
+                            <option value="CGN">Köln (CGN)</option>
                             <option value="STR">Stuttgart (STR)</option>
                         </optgroup>
-                        <optgroup label="Netherlands">
+                        <optgroup label="Hollanda">
                             <option value="AMS">Amsterdam (AMS)</option>
                             <option value="RTM">Rotterdam (RTM)</option>
                             <option value="EIN">Eindhoven (EIN)</option>
                         </optgroup>
-                        <optgroup label="Bulgaria">
-                            <option value="SOF">Sofia (SOF)</option>
+                        <optgroup label="Bulgaristan">
+                            <option value="SOF">Sofya (SOF)</option>
                             <option value="VAR">Varna (VAR)</option>
                             <option value="BOJ">Burgas (BOJ)</option>
                         </optgroup>
-                        <optgroup label="Romania">
-                            <option value="OTP">Bucharest (OTP)</option>
+                        <optgroup label="Romanya">
+                            <option value="OTP">Bükreş (OTP)</option>
                             <option value="CLJ">Cluj-Napoca (CLJ)</option>
                             <option value="TSR">Timișoara (TSR)</option>
                         </optgroup>
-                        <optgroup label="Turkey">
-                            <option value="IST">Istanbul (IST)</option>
-                            <option value="SAW">Istanbul Sabiha Gökçen (SAW)</option>
+                        <optgroup label="Türkiye">
+                            <option value="IST">İstanbul (IST)</option>
+                            <option value="SAW">İstanbul Sabiha Gökçen (SAW)</option>
                             <option value="AYT">Antalya (AYT)</option>
                             <option value="ESB">Ankara (ESB)</option>
-                            <option value="ADB">Izmir (ADB)</option>
+                            <option value="ADB">İzmir (ADB)</option>
                             <option value="BJV">Bodrum (BJV)</option>
                             <option value="DLM">Dalaman (DLM)</option>
                             <option value="ADA">Adana (ADA)</option>
@@ -458,39 +639,39 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label id="toLabel">TO</label>
+                    <label id="toLabel">NEREYE</label>
                     <select id="toAirport">
-                        <option value="">Select destination</option>
-                        <optgroup label="Germany">
+                        <option value="">Varış havalimanını seçin</option>
+                        <optgroup label="Almanya">
                             <option value="FRA">Frankfurt (FRA)</option>
-                            <option value="MUC">Munich (MUC)</option>
+                            <option value="MUC">Münih (MUC)</option>
                             <option value="BER">Berlin (BER)</option>
                             <option value="DUS">Düsseldorf (DUS)</option>
                             <option value="HAM">Hamburg (HAM)</option>
-                            <option value="CGN">Cologne (CGN)</option>
+                            <option value="CGN">Köln (CGN)</option>
                             <option value="STR">Stuttgart (STR)</option>
                         </optgroup>
-                        <optgroup label="Netherlands">
+                        <optgroup label="Hollanda">
                             <option value="AMS">Amsterdam (AMS)</option>
                             <option value="RTM">Rotterdam (RTM)</option>
                             <option value="EIN">Eindhoven (EIN)</option>
                         </optgroup>
-                        <optgroup label="Bulgaria">
-                            <option value="SOF">Sofia (SOF)</option>
+                        <optgroup label="Bulgaristan">
+                            <option value="SOF">Sofya (SOF)</option>
                             <option value="VAR">Varna (VAR)</option>
                             <option value="BOJ">Burgas (BOJ)</option>
                         </optgroup>
-                        <optgroup label="Romania">
-                            <option value="OTP">Bucharest (OTP)</option>
+                        <optgroup label="Romanya">
+                            <option value="OTP">Bükreş (OTP)</option>
                             <option value="CLJ">Cluj-Napoca (CLJ)</option>
                             <option value="TSR">Timișoara (TSR)</option>
                         </optgroup>
-                        <optgroup label="Turkey">
-                            <option value="IST">Istanbul (IST)</option>
-                            <option value="SAW">Istanbul Sabiha Gökçen (SAW)</option>
+                        <optgroup label="Türkiye">
+                            <option value="IST">İstanbul (IST)</option>
+                            <option value="SAW">İstanbul Sabiha Gökçen (SAW)</option>
                             <option value="AYT">Antalya (AYT)</option>
                             <option value="ESB">Ankara (ESB)</option>
-                            <option value="ADB">Izmir (ADB)</option>
+                            <option value="ADB">İzmir (ADB)</option>
                             <option value="BJV">Bodrum (BJV)</option>
                             <option value="DLM">Dalaman (DLM)</option>
                             <option value="ADA">Adana (ADA)</option>
@@ -499,292 +680,189 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label id="dateLabel">DEPARTURE DATE</label>
+                    <label id="dateLabel">GİDİŞ TARİHİ</label>
                     <input type="date" id="departureDate">
                 </div>
                 <button class="search-btn" onclick="searchFlights()">
-                    <span id="searchBtnText">Search Flights</span>
+                    <span id="searchBtnText">Uçuş Ara</span>
                 </button>
             </div>
         </div>
 
+        <!-- Results Section -->
         <div class="results-section" id="resultsSection">
             <div class="route-header">
                 <div class="route-info">
-                    <h2 id="routeTitle">Istanbul → Adıyaman</h2>
-                    <p class="route-details" id="routeDetails">DEPARTURE 08 January 2026, Thu</p>
+                    <h2 id="routeTitle"></h2>
+                    <p class="route-details" id="routeDetails"></p>
                 </div>
                 <button class="edit-search-btn" onclick="editSearch()">
-                    <span id="editBtnText">✎ Edit Search</span>
+                    <span id="editBtnText">✎ Aramayı Düzenle</span>
                 </button>
             </div>
 
             <div class="date-selector">
                 <div class="date-card selected">
-                    <div class="date-day">08 Jan Thu</div>
-                    <div class="date-price">FREE</div>
+                    <div class="date-day">08 Oca Per</div>
+                    <div class="date-price">ÜCRETSİZ</div>
                 </div>
                 <div class="date-card">
-                    <div class="date-day">09 Jan Fri</div>
-                    <div class="date-price">FREE</div>
+                    <div class="date-day">09 Oca Cum</div>
+                    <div class="date-price">ÜCRETSİZ</div>
                 </div>
                 <div class="date-card">
-                    <div class="date-day">10 Jan Sat</div>
-                    <div class="date-price">FREE</div>
+                    <div class="date-day">10 Oca Cmt</div>
+                    <div class="date-price">ÜCRETSİZ</div>
                 </div>
                 <div class="date-card">
-                    <div class="date-day">11 Jan Sun</div>
-                    <div class="date-price">FREE</div>
+                    <div class="date-day">11 Oca Paz</div>
+                    <div class="date-price">ÜCRETSİZ</div>
                 </div>
             </div>
 
-            <div class="flights-header">
-                <h3 class="flights-title" id="flightsTitle">Istanbul → Adıyaman Your Flight</h3>
-            </div>
+            <div class="section-label" id="directLabel">Direkt Uçuşlar</div>
 
-            <div class="section-label" id="directLabel">Direct Flights</div>
-
-            <div class="flight-card" id="directFlight">
+            <div class="flight-card" onclick="selectFlight(this, '11:00', '11:25')">
                 <div class="flight-info-row">
                     <div class="flight-time">
-                        <div class="flight-time-big" id="flightTime">11:00</div>
-                        <div class="flight-location" id="flightFrom">Istanbul (SAW)</div>
-                        <div class="flight-location-detail">Sabiha Gökçen Airport</div>
+                        <div class="flight-time-big">11:00</div>
+                        <div class="flight-location" id="flightFrom1"></div>
                     </div>
                     <div class="flight-duration">
                         <div class="duration-icon">✈</div>
-                        <div class="duration-text" id="directDuration">25min</div>
-                        <div class="flight-type" id="directType">Direct</div>
+                        <div class="duration-text">25dk</div>
+                        <div class="flight-type">Direkt</div>
                     </div>
                     <div class="flight-time">
-                        <div class="flight-time-big" id="arrivalTime">11:25</div>
-                        <div class="flight-location" id="flightTo">Adıyaman (ADF)</div>
-                        <div class="flight-location-detail">Adıyaman Airport</div>
+                        <div class="flight-time-big">11:25</div>
+                        <div class="flight-location" id="flightTo1"></div>
                     </div>
                     <div class="flight-status">
-                        <div class="status-badge" id="statusBadge">AVAILABLE</div>
+                        <div class="status-badge">MÜSAİT</div>
                     </div>
                     <div class="flight-price">
-                        <div class="price-amount">FREE</div>
-                        <div class="price-currency">Economy</div>
+                        <div class="price-amount">ÜCRETSİZ</div>
+                        <div class="price-currency">Ekonomi</div>
                     </div>
                 </div>
             </div>
 
-            <div class="flight-card">
+            <div class="flight-card" onclick="selectFlight(this, '17:00', '17:25')">
                 <div class="flight-info-row">
                     <div class="flight-time">
                         <div class="flight-time-big">17:00</div>
-                        <div class="flight-location" id="flightFrom2">Istanbul (SAW)</div>
-                        <div class="flight-location-detail">Sabiha Gökçen Airport</div>
+                        <div class="flight-location" id="flightFrom2"></div>
                     </div>
                     <div class="flight-duration">
                         <div class="duration-icon">✈</div>
-                        <div class="duration-text">25min</div>
-                        <div class="flight-type">Direct</div>
+                        <div class="duration-text">25dk</div>
+                        <div class="flight-type">Direkt</div>
                     </div>
                     <div class="flight-time">
                         <div class="flight-time-big">17:25</div>
-                        <div class="flight-location" id="flightTo2">Adıyaman (ADF)</div>
-                        <div class="flight-location-detail">Adıyaman Airport</div>
+                        <div class="flight-location" id="flightTo2"></div>
                     </div>
                     <div class="flight-status">
-                        <div class="status-badge">AVAILABLE</div>
+                        <div class="status-badge">MÜSAİT</div>
                     </div>
                     <div class="flight-price">
-                        <div class="price-amount">FREE</div>
-                        <div class="price-currency">Economy</div>
+                        <div class="price-amount">ÜCRETSİZ</div>
+                        <div class="price-currency">Ekonomi</div>
                     </div>
                 </div>
             </div>
 
-            <div class="flight-card">
+            <div class="flight-card" onclick="selectFlight(this, '18:00', '18:25')">
                 <div class="flight-info-row">
                     <div class="flight-time">
                         <div class="flight-time-big">18:00</div>
-                        <div class="flight-location" id="flightFrom3">Istanbul (SAW)</div>
-                        <div class="flight-location-detail">Sabiha Gökçen Airport</div>
+                        <div class="flight-location" id="flightFrom3"></div>
                     </div>
                     <div class="flight-duration">
                         <div class="duration-icon">✈</div>
-                        <div class="duration-text">25min</div>
-                        <div class="flight-type">Direct</div>
+                        <div class="duration-text">25dk</div>
+                        <div class="flight-type">Direkt</div>
                     </div>
                     <div class="flight-time">
                         <div class="flight-time-big">18:25</div>
-                        <div class="flight-location" id="flightTo3">Adıyaman (ADF)</div>
-                        <div class="flight-location-detail">Adıyaman Airport</div>
+                        <div class="flight-location" id="flightTo3"></div>
                     </div>
                     <div class="flight-status">
-                        <div class="status-badge">AVAILABLE</div>
+                        <div class="status-badge">MÜSAİT</div>
                     </div>
                     <div class="flight-price">
-                        <div class="price-amount">FREE</div>
-                        <div class="price-currency">Economy</div>
+                        <div class="price-amount">ÜCRETSİZ</div>
+                        <div class="price-currency">Ekonomi</div>
                     </div>
                 </div>
             </div>
 
-            <div class="flight-card">
+            <div class="flight-card" onclick="selectFlight(this, '19:00', '19:25')">
                 <div class="flight-info-row">
                     <div class="flight-time">
                         <div class="flight-time-big">19:00</div>
-                        <div class="flight-location" id="flightFrom4">Istanbul (SAW)</div>
-                        <div class="flight-location-detail">Sabiha Gökçen Airport</div>
+                        <div class="flight-location" id="flightFrom4"></div>
                     </div>
                     <div class="flight-duration">
                         <div class="duration-icon">✈</div>
-                        <div class="duration-text">25min</div>
-                        <div class="flight-type">Direct</div>
+                        <div class="duration-text">25dk</div>
+                        <div class="flight-type">Direkt</div>
                     </div>
                     <div class="flight-time">
                         <div class="flight-time-big">19:25</div>
-                        <div class="flight-location" id="flightTo4">Adıyaman (ADF)</div>
-                        <div class="flight-location-detail">Adıyaman Airport</div>
+                        <div class="flight-location" id="flightTo4"></div>
                     </div>
                     <div class="flight-status">
-                        <div class="status-badge">AVAILABLE</div>
+                        <div class="status-badge">MÜSAİT</div>
                     </div>
                     <div class="flight-price">
-                        <div class="price-amount">FREE</div>
-                        <div class="price-currency">Economy</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="connecting-section">
-                <div class="section-label" id="connectingLabel">Connecting Flights</div>
-
-                <div class="flight-card">
-                    <div class="transfer-badge" id="transferBadge">1 Transfer</div>
-                    <div class="flight-info-row">
-                        <div class="flight-time">
-                            <div class="flight-time-big">21:15</div>
-                            <div class="flight-location" id="flightFrom5">Istanbul (SAW)</div>
-                            <div class="flight-location-detail">Sabiha Gökçen Airport</div>
-                        </div>
-                        <div class="flight-duration">
-                            <div class="duration-icon">✈ ··· ✈</div>
-                            <div class="duration-text">via ESB</div>
-                            <div class="duration-text">40min</div>
-                        </div>
-                        <div class="flight-time">
-                            <div class="flight-time-big">08:55</div>
-                            <div class="flight-location" id="flightTo5">Adıyaman (ADF)</div>
-                            <div class="flight-location-detail">Adıyaman Airport</div>
-                        </div>
-                        <div class="flight-status">
-                            <div class="status-badge">AVAILABLE</div>
-                        </div>
-                        <div class="flight-price">
-                            <div class="price-amount">FREE</div>
-                            <div class="price-currency">Economy</div>
-                        </div>
+                        <div class="price-amount">ÜCRETSİZ</div>
+                        <div class="price-currency">Ekonomi</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        let currentLang = 'en';
+        <!-- Class Selection -->
+        <div class="class-selection" id="classSection">
+            <h2 class="search-title" id="classTitle">Sınıf Seçin</h2>
+            <div class="class-cards">
+                <div class="class-card" onclick="selectClass('ecojet')">
+                    <div class="class-name">EcoJet</div>
+                    <div class="class-price">ÜCRETSİZ</div>
+                    <ul class="class-features">
+                        <li id="eco1">8kg El Bagajı</li>
+                        <li id="eco2">15kg Bagaj</li>
+                        <li id="eco3">Standart Koltuk</li>
+                    </ul>
+                </div>
+                <div class="class-card" onclick="selectClass('premiumjet')">
+                    <div class="class-name">PremiumJet</div>
+                    <div class="class-price">25 Robux</div>
+                    <ul class="class-features">
+                        <li id="premium1">12kg El Bagajı</li>
+                        <li id="premium2">25kg Bagaj</li>
+                        <li id="premium3">Premium Koltuk</li>
+                        <li id="premium4">Öncelikli Biniş</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="continue-btn" onclick="goToPassengerInfo()" id="continueClassBtn">Devam Et</button>
+        </div>
 
-        const translations = {
-            en: {
-                searchTitle: 'Book Your Flight',
-                fromLabel: 'FROM',
-                toLabel: 'TO',
-                dateLabel: 'DEPARTURE DATE',
-                searchBtnText: 'Search Flights',
-                loginText: 'Login →',
-                langText: '🌐 EN ▼',
-                editBtnText: '✎ Edit Search',
-                directLabel: 'Direct Flights',
-                connectingLabel: 'Connecting Flights',
-                transferBadge: '1 Transfer',
-                directType: 'Direct',
-                directDuration: '25min',
-                statusBadge: 'AVAILABLE',
-                flightsTitle: 'Your Flight'
-            },
-            tr: {
-                searchTitle: 'Uçuşunuzu Rezerve Edin',
-                fromLabel: 'NEREDEN',
-                toLabel: 'NEREYE',
-                dateLabel: 'GİDİŞ TARİHİ',
-                searchBtnText: 'Uçuş Ara',
-                loginText: 'Giriş Yap →',
-                langText: '🌐 TR ▼',
-                editBtnText: '✎ Aramayı Düzenle',
-                directLabel: 'Direkt Uçuşlar',
-                connectingLabel: 'Aktarmalı Uçuşlar',
-                transferBadge: '1 Aktarma',
-                directType: 'Direkt',
-                directDuration: '25dk',
-                statusBadge: 'MÜSAİT',
-                flightsTitle: 'Uçuşunuz'
-            }
-        };
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'tr' : 'en';
-            updateLanguage();
-        }
-
-        function updateLanguage() {
-            const t = translations[currentLang];
-            document.getElementById('searchTitle').textContent = t.searchTitle;
-            document.getElementById('fromLabel').textContent = t.fromLabel;
-            document.getElementById('toLabel').textContent = t.toLabel;
-            document.getElementById('dateLabel').textContent = t.dateLabel;
-            document.getElementById('searchBtnText').textContent = t.searchBtnText;
-            document.getElementById('loginText').textContent = t.loginText;
-            document.getElementById('langText').textContent = t.langText;
-            document.getElementById('editBtnText').textContent = t.editBtnText;
-            document.getElementById('directLabel').textContent = t.directLabel;
-            document.getElementById('connectingLabel').textContent = t.connectingLabel;
-            document.getElementById('transferBadge').textContent = t.transferBadge;
-            document.getElementById('directType').textContent = t.directType;
-            document.getElementById('directDuration').textContent = t.directDuration;
+        <!-- Passenger Info -->
+        <div class="passenger-info" id="passengerSection">
+            <h2 class="search-title" id="passengerTitle">Yolcu Bilgileri</h2>
+            <div class="search-form">
+                <div class="form-group">
+                    <label id="usernameLabel">ROBLOX KULLANICI ADI</label>
+                    <input type="text" id="robloxUsername" placeholder="kullaniciadi123">
+                </div>
+                <div class="form-group">
+                    <label id="useridLabel">ROBLOX USER ID</label>
+                    <input type="text" id="robloxUserId" placeholder="123456789">
+                </div>
+            </div>
             
-            document.querySelectorAll('.status-badge').forEach(el => {
-                el.textContent = t.statusBadge;
-            });
-        }
-
-        function searchFlights() {
-            const from = document.getElementById('fromAirport').value;
-            const to = document.getElementById('toAirport').value;
-            const date = document.getElementById('departureDate').value;
-
-            if (!from || !to || !date) {
-                alert(currentLang === 'en' ? 'Please fill all fields!' : 'Lütfen tüm alanları doldurun!');
-                return;
-            }
-
-            if (from === to) {
-                alert(currentLang === 'en' ? 'Departure and arrival airports cannot be the same!' : 'Kalkış ve varış havalimanları aynı olamaz!');
-                return;
-            }
-
-            document.getElementById('searchSection').style.display = 'none';
-            document.getElementById('resultsSection').classList.add('active');
-            
-            const fromText = document.getElementById('fromAirport').selectedOptions[0].text;
-            const toText = document.getElementById('toAirport').selectedOptions[0].text;
-            document.getElementById('routeTitle').textContent = `${fromText.split('(')[0].trim()} → ${toText.split('(')[0].trim()}`;
-            
-            const dateObj = new Date(date);
-            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
-            document.getElementById('routeDetails').textContent = `DEPARTURE ${dateObj.toLocaleDateString('en-US', options)}`;
-        }
-
-        function editSearch() {
-            document.getElementById('searchSection').style.display = 'block';
-            document.getElementById('resultsSection').classList.remove('active');
-        }
-
-        document.getElementById('departureDate').valueAsDate = new Date();
-    </script>
-</body>
-</html>
+            <div class="booking-summary">
+                <h3 style="color: #0d4a8f; margin-bottom: 15px;" id="summaryTitle">Rezervasyon Özeti</h3>
