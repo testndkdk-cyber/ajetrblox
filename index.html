@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJet Roblox Airlines - Fly Anywhere</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lang-selector {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-selector:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .flight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .flight-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .flight-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .flight-route {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .flight-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .class-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .class-card {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .class-card:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+        }
+
+        .class-card.selected {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .class-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .class-price {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .btn-book {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 25px;
+            transition: transform 0.3s;
+        }
+
+        .btn-book:hover {
+            transform: scale(1.05);
+        }
+
+        .airports-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .airports-section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 32px;
+        }
+
+        .airports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .airport-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .airport-code {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .airport-name {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .info-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .duration-info {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .duration-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .duration-card h4 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .duration-card .time {
+            font-size: 32px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">✈️ AJet Roblox</div>
+                <button class="lang-selector" onclick="toggleLanguage()">
+                    <span id="langBtn">🇹🇷 Türkçe</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <div class="container">
+            <h1 id="heroTitle">Welcome to AJet Roblox Airlines</h1>
+            <p id="heroSubtitle">Fly to any destination in Roblox!</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="booking-card">
+            <h2 id="bookingTitle" style="color: #667eea; margin-bottom: 30px;">Book Your Flight</h2>
+            
+            <div class="form-group">
+                <label id="fromLabel">From</label>
+                <select id="fromAirport">
+                    <option value="">Select departure airport</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="toLabel">To</label>
+                <select id="toAirport">
+                    <option value="">Select arrival airport</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="classLabel">Select Class</label>
+                <div class="class-options">
+                    <div class="class-card selected" onclick="selectClass('economy')">
+                        <div class="class-name" id="economyName">Economy</div>
+                        <div class="class-price" id="economyPrice">FREE</div>
+                    </div>
+                    <div class="class-card" onclick="selectClass('business')">
+                        <div class="class-name" id="businessName">Business</div>
+                        <div class="class-price">25 Robux</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-book" onclick="bookFlight()">
+                <span id="bookBtn">Book Flight</span>
+            </button>
+        </div>
+
+        <div class="info-section">
+            <h3 id="durationTitle">Flight Durations</h3>
+            <div class="duration-info">
+                <div class="duration-card">
+                    <h4 id="domesticLabel">Domestic Flights</h4>
+                    <div class="time">25min</div>
+                </div>
+                <div class="duration-card">
+                    <h4 id="internationalLabel">International Flights</h4>
+                    <div class="time">35min</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="airports-section">
+            <h2 id="airportsTitle">Available Airports</h2>
+            <div class="airports-grid" id="airportsGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'en';
+        let selectedClass = 'economy';
+
+        const translations = {
+            en: {
+                heroTitle: 'Welcome to AJet Roblox Airlines',
+                heroSubtitle: 'Fly to any destination in Roblox!',
+                bookingTitle: 'Book Your Flight',
+                fromLabel: 'From',
+                toLabel: 'To',
+                classLabel: 'Select Class',
+                economyName: 'Economy',
+                economyPrice: 'FREE',
+                businessName: 'Business',
+                bookBtn: 'Book Flight',
+                durationTitle: 'Flight Durations',
+                domesticLabel: 'Domestic Flights',
+                internationalLabel: 'International Flights',
+                airportsTitle: 'Available Airports',
+                langBtn: '🇹🇷 Türkçe',
+                selectDeparture: 'Select departure airport',
+                selectArrival: 'Select arrival airport',
+                bookingSuccess: 'Flight booked successfully!'
+            },
+            tr: {
+                heroTitle: 'AJet Roblox Havayollarına Hoş Geldiniz',
+                heroSubtitle: 'Roblox\'ta her yere uçun!',
+                bookingTitle: 'Uçuşunuzu Rezerve Edin',
+                fromLabel: 'Nereden',
+                toLabel: 'Nereye',
+                classLabel: 'Sınıf Seçin',
+                economyName: 'Ekonomi',
+                economyPrice: 'ÜCRETSİZ',
+                businessName: 'Business',
+                bookBtn: 'Uçuş Rezerve Et',
+                durationTitle: 'Uçuş Süreleri',
+                domesticLabel: 'İç Hat Uçuşları',
+                internationalLabel: 'Dış Hat Uçuşları',
+                airportsTitle: 'Mevcut Havalimanları',
+                langBtn: '🇬🇧 English',
+                selectDeparture: 'Kalkış havalimanını seçin',
+                selectArrival: 'Varış havalimanını seçin',
+                bookingSuccess: 'Uçuş başarıyla rezerve edildi!'
+            }
+        };
+
+        const airports = [
+            { code: 'IST', name: 'Istanbul Airport', country: 'Turkey' },
+            { code: 'SAW', name: 'Sabiha Gökçen Airport', country: 'Turkey' },
+            { code: 'AYT', name: 'Antalya Airport', country: 'Turkey' },
+            { code: 'ESB', name: 'Ankara Esenboğa Airport', country: 'Turkey' },
+            { code: 'ADB', name: 'Izmir Adnan Menderes Airport', country: 'Turkey' },
+            { code: 'BJV', name: 'Bodrum Airport', country: 'Turkey' },
+            { code: 'DLM', name: 'Dalaman Airport', country: 'Turkey' },
+            { code: 'TZX', name: 'Trabzon Airport', country: 'Turkey' },
+            { code: 'LHR', name: 'London Heathrow', country: 'UK' },
+            { code: 'CDG', name: 'Paris Charles de Gaulle', country: 'France' },
+            { code: 'FRA', name: 'Frankfurt Airport', country: 'Germany' },
+            { code: 'AMS', name: 'Amsterdam Schiphol', country: 'Netherlands' },
+            { code: 'FCO', name: 'Rome Fiumicino', country: 'Italy' },
+            { code: 'MAD', name: 'Madrid Barajas', country: 'Spain' },
+            { code: 'BCN', name: 'Barcelona El Prat', country: 'Spain' },
+            { code: 'VIE', name: 'Vienna Airport', country: 'Austria' },
+            { code: 'ZRH', name: 'Zurich Airport', country: 'Switzerland' },
+            { code: 'DXB', name: 'Dubai International', country: 'UAE' },
+            { code: 'JFK', name: 'New York JFK', country: 'USA' },
+            { code: 'LAX', name: 'Los Angeles International', country: 'USA' }
+        ];
+
+        function loadAirports() {
+            const fromSelect = document.getElementById('fromAirport');
+            const toSelect = document.getElementById('toAirport');
+            const grid = document.getElementById('airportsGrid');
+
+            const placeholderText = currentLang === 'en' ? translations.en.selectDeparture : translations.tr.selectDeparture;
+            fromSelect.innerHTML = `<option value="">${placeholderText}</option>`;
+            toSelect.innerHTML = `<option value="">${currentLang === 'en' ? translations.en.selectArrival : translations.tr.selectArrival}</option>`;
+            grid.innerHTML = '';
+
+            airports.forEach(airport => {
+                const option1 = document.createElement('option');
+                option1.value = airport.code;
+                option1.textContent = `${airport.code} - ${airport.name}`;
+                fromSelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = airport.code;
+                option2.textContent = `${airport.code} - ${airport.name}`;
+                toSelect.appendChild(option2);
+
+                const airportDiv = document.createElement('div');
+                airportDiv.className = 'airport-item';
+                airportDiv.innerHTML = `
+                    <div class="airport-code">${airport.code}</div>
+                    <div class="airport-name">${airport.name}</div>
+                    <div class="airport-name">${airport.country}</div>
+                `;
+                grid.appendChild(airportDiv);
+            });
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'tr' : 'en';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const lang = translations[currentLang];
+            document.getElementById('heroTitle').textContent = lang.heroTitle;
+            document.getElementById('heroSubtitle').textContent = lang.heroSubtitle;
+            document.getElementById('bookingTitle').textContent = lang.bookingTitle;
+            document.getElementById('fromLabel').textContent = lang.fromLabel;
+            document.getElementById('toLabel').textContent = lang.toLabel;
+            document.getElementById('classLabel').textContent = lang.classLabel;
+            document.getElementById('economyName').textContent = lang.economyName;
+            document.getElementById('economyPrice').textContent = lang.economyPrice;
+            document.getElementById('businessName').textContent = lang.businessName;
+            document.getElementById('bookBtn').textContent = lang.bookBtn;
+            document.getElementById('durationTitle').textContent = lang.durationTitle;
+            document.getElementById('domesticLabel').textContent = lang.domesticLabel;
+            document.getElementById('internationalLabel').textContent = lang.internationalLabel;
+            document.getElementById('airportsTitle').textContent = lang.airportsTitle;
+            document.getElementById('langBtn').textContent = lang.langBtn;
+            
+            loadAirports();
+        }
+
+        function selectClass(className) {
+            selectedClass = className;
+            document.querySelectorAll('.class-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.class-card').classList.add('selected');
+        }
+
+        function bookFlight() {
+            const from = document.getElementById('fromAirport').value;
+            const to = document.getElementById('toAirport').value;
+            
+            if (!from || !to) {
+                alert(currentLang === 'en' ? 'Please select departure and arrival airports!' : 'Lütfen kalkış ve varış havalimanlarını seçin!');
+                return;
+            }
+            
+            if (from === to) {
+                alert(currentLang === 'en' ? 'Departure and arrival airports cannot be the same!' : 'Kalkış ve varış havalimanları aynı olamaz!');
+                return;
+            }
+            
+            const price = selectedClass === 'economy' ? (currentLang === 'en' ? 'FREE' : 'ÜCRETSİZ') : '25 Robux';
+            const message = currentLang === 'en' 
+                ? `Flight booked successfully!\n\nFrom: ${from}\nTo: ${to}\nClass: ${selectedClass === 'economy' ? 'Economy' : 'Business'}\nPrice: ${price}\n\nJoin the Roblox game to board your flight!`
+                : `Uçuş başarıyla rezerve edildi!\n\nNereden: ${from}\nNereye: ${to}\nSınıf: ${selectedClass === 'economy' ? 'Ekonomi' : 'Business'}\nFiyat: ${price}\n\nUçuşunuza binmek için Roblox oyununa katılın!`;
+            
+            alert(message);
+        }
+
+        loadAirports();
+    </script>
+</body>
+</html>
