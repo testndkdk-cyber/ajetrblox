@@ -15,6 +15,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(180deg, #1e5a9e 0%, #2d7bc7 100%);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -80,6 +82,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 40px 30px;
+            flex: 1;
         }
 
         .search-section {
@@ -285,7 +288,7 @@
         .flight-time-big {
             font-size: 28px;
             font-weight: 600;
-            color: #0d4a8f;
+            color: #0d4a9e;
             margin-bottom: 5px;
         }
 
@@ -342,7 +345,7 @@
         .price-amount {
             font-size: 24px;
             font-weight: 700;
-            color: #0d4a8f;
+            color: #0d4a9e;
         }
 
         .price-currency {
@@ -391,7 +394,7 @@
         .class-name {
             font-size: 24px;
             font-weight: 700;
-            color: #0d4a8f;
+            color: #0d4a9e;
             margin-bottom: 15px;
         }
 
@@ -434,7 +437,7 @@
         }
 
         .continue-btn {
-            background: #0d4a8f;
+            background: #0d4a9e;
             color: white;
             padding: 16px 40px;
             border: none;
@@ -470,7 +473,7 @@
             border-bottom: none;
             font-weight: 700;
             font-size: 18px;
-            color: #0d4a8f;
+            color: #0d4a9e;
         }
 
         .confirmation {
@@ -518,7 +521,7 @@
         }
 
         .detail-value {
-            color: #0d4a8f;
+            color: #0d4a9e;
             font-weight: 600;
         }
 
@@ -557,6 +560,53 @@
             background: #777;
         }
 
+        .footer {
+            background: #0d4a9e;
+            color: white;
+            padding: 20px 0;
+            margin-top: 50px;
+            text-align: center;
+            border-top: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .disclaimer {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        /* Hidden canvas for boarding pass generation */
+        .hidden-canvas {
+            display: none;
+        }
+
         @media (max-width: 1024px) {
             .search-form {
                 grid-template-columns: 1fr;
@@ -573,6 +623,10 @@
 
             .class-cards {
                 grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                gap: 20px;
             }
         }
     </style>
@@ -867,7 +921,7 @@
             </div>
             
             <div class="booking-summary">
-                <h3 style="color: #0d4a8f; margin-bottom: 15px;" id="summaryTitle">Rezervasyon Özeti</h3>
+                <h3 style="color: #0d4a9e; margin-bottom: 15px;" id="summaryTitle">Rezervasyon Özeti</h3>
                 <div class="summary-row">
                     <span id="summaryRoute">Rota:</span>
                     <span id="summaryRouteValue">-</span>
@@ -930,10 +984,31 @@
             
             <div>
                 <button class="download-btn" onclick="downloadTicket()" id="downloadBtn">Bileti İndir</button>
+                <button class="download-btn" onclick="downloadBoardingPass()" style="background: #2196F3;" id="boardingBtn">Boarding Pass</button>
                 <button class="skip-btn" onclick="goHome()" id="skipBtn">Ana Sayfaya Dön</button>
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="disclaimer" id="disclaimerText">
+                This is not affiliated with AJet. This is just for Roblox roleplay purposes.
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link" id="link1">Hakkımızda</a>
+                <a href="#" class="footer-link" id="link2">Yardım</a>
+                <a href="#" class="footer-link" id="link3">Gizlilik Politikası</a>
+                <a href="#" class="footer-link" id="link4">Kullanım Şartları</a>
+                <a href="#" class="footer-link" id="link5">İletişim</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden canvas for PDF generation -->
+    <canvas id="ticketCanvas" class="hidden-canvas"></canvas>
+    <canvas id="boardingCanvas" class="hidden-canvas"></canvas>
 
     <script>
         // Flight data storage
@@ -950,7 +1025,8 @@
             class: '',
             price: '',
             username: '',
-            userId: ''
+            userId: '',
+            bookingCode: ''
         };
 
         // Initialize date
@@ -1030,8 +1106,15 @@
                 document.getElementById('confirmPrice').textContent = 'Total:';
                 document.getElementById('confirmCode').textContent = 'Booking Code:';
                 document.getElementById('downloadBtn').textContent = 'Download Ticket';
+                document.getElementById('boardingBtn').textContent = 'Boarding Pass';
                 document.getElementById('skipBtn').textContent = 'Return to Home';
                 document.getElementById('continueFlightBtn').textContent = 'Continue';
+                document.getElementById('disclaimerText').textContent = 'This is not affiliated with AJet. This is just for Roblox roleplay purposes.';
+                document.getElementById('link1').textContent = 'About Us';
+                document.getElementById('link2').textContent = 'Help';
+                document.getElementById('link3').textContent = 'Privacy Policy';
+                document.getElementById('link4').textContent = 'Terms of Service';
+                document.getElementById('link5').textContent = 'Contact';
             } else {
                 // Switch to Turkish
                 langBtn.textContent = '🌐 TR ▼';
@@ -1071,8 +1154,15 @@
                 document.getElementById('confirmPrice').textContent = 'Toplam:';
                 document.getElementById('confirmCode').textContent = 'Rezervasyon Kodu:';
                 document.getElementById('downloadBtn').textContent = 'Bileti İndir';
+                document.getElementById('boardingBtn').textContent = 'Boarding Pass';
                 document.getElementById('skipBtn').textContent = 'Ana Sayfaya Dön';
                 document.getElementById('continueFlightBtn').textContent = 'Devam Et';
+                document.getElementById('disclaimerText').textContent = 'Bu site AJet ile ilişkili değildir. Sadece Roblox roleplay için tasarlanmıştır.';
+                document.getElementById('link1').textContent = 'Hakkımızda';
+                document.getElementById('link2').textContent = 'Yardım';
+                document.getElementById('link3').textContent = 'Gizlilik Politikası';
+                document.getElementById('link4').textContent = 'Kullanım Şartları';
+                document.getElementById('link5').textContent = 'İletişim';
             }
         }
 
@@ -1106,6 +1196,7 @@
             bookingData.to = to;
             bookingData.fromName = fromName.split(' (')[0];
             bookingData.toName = toName.split(' (')[0];
+            bookingData.date = date;
             
             // Update route information
             document.getElementById('routeTitle').textContent = `${bookingData.fromName} → ${bookingData.toName}`;
@@ -1244,6 +1335,10 @@
             bookingData.username = username;
             bookingData.userId = userId;
             
+            // Generate random booking code
+            const randomCode = `AJ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+            bookingData.bookingCode = randomCode;
+            
             // Update confirmation details
             document.getElementById('confirmRouteValue').textContent = 
                 `${bookingData.fromName} → ${bookingData.toName}`;
@@ -1252,9 +1347,6 @@
             document.getElementById('confirmPassengerValue').textContent = bookingData.username;
             document.getElementById('confirmUserIdValue').textContent = bookingData.userId;
             document.getElementById('confirmPriceValue').textContent = bookingData.price;
-            
-            // Generate random booking code
-            const randomCode = `AJ-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
             document.getElementById('confirmCodeValue').textContent = randomCode;
             
             // Show confirmation
@@ -1263,8 +1355,209 @@
         }
 
         function downloadTicket() {
-            alert('Bilet indirme özelliği demo sürümünde aktif değil. Rezervasyon kodunuz: ' + 
-                  document.getElementById('confirmCodeValue').textContent);
+            const canvas = document.getElementById('ticketCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size for A4
+            canvas.width = 794; // A4 width in pixels at 96 DPI
+            canvas.height = 1123; // A4 height
+            
+            // Background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Header with gradient
+            const headerGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            headerGradient.addColorStop(0, '#0d4a9e');
+            headerGradient.addColorStop(1, '#2d7bc7');
+            ctx.fillStyle = headerGradient;
+            ctx.fillRect(0, 0, canvas.width, 150);
+            
+            // Logo
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('AJet', canvas.width / 2, 80);
+            
+            // Title
+            ctx.font = '24px Arial';
+            ctx.fillText('E-Bilet / E-Ticket', canvas.width / 2, 120);
+            
+            // Ticket content
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'left';
+            
+            // Passenger info box
+            ctx.strokeStyle = '#0d4a9e';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, 180, canvas.width - 100, 100);
+            
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('YOLCU BİLGİLERİ / PASSENGER INFORMATION', 70, 210);
+            
+            ctx.font = '16px Arial';
+            ctx.fillText(`İsim / Name: ${bookingData.username}`, 70, 240);
+            ctx.fillText(`User ID: ${bookingData.userId}`, 70, 260);
+            
+            // Flight info box
+            ctx.strokeRect(50, 300, canvas.width - 100, 150);
+            
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('UÇUŞ BİLGİLERİ / FLIGHT INFORMATION', 70, 330);
+            
+            ctx.font = '16px Arial';
+            ctx.fillText(`Rota / Route: ${bookingData.fromName} → ${bookingData.toName}`, 70, 360);
+            ctx.fillText(`Tarih / Date: ${formatDisplayDate(bookingData.date)}`, 70, 385);
+            ctx.fillText(`Kalkış / Departure: ${bookingData.flightTime.split(' - ')[0]}`, 70, 410);
+            ctx.fillText(`Varış / Arrival: ${bookingData.flightTime.split(' - ')[1]}`, 70, 435);
+            
+            // Booking info box
+            ctx.strokeRect(50, 470, canvas.width - 100, 100);
+            
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('REZERVASYON BİLGİLERİ / BOOKING INFORMATION', 70, 500);
+            
+            ctx.font = '16px Arial';
+            ctx.fillText(`Sınıf / Class: ${bookingData.class}`, 70, 530);
+            ctx.fillText(`Fiyat / Price: ${bookingData.price}`, 70, 555);
+            ctx.fillText(`Rezervasyon Kodu / Booking Code: ${bookingData.bookingCode}`, 70, 580);
+            
+            // Barcode area
+            ctx.strokeRect(50, 590, canvas.width - 100, 100);
+            
+            // Generate simple barcode
+            ctx.fillStyle = '#000';
+            for(let i = 0; i < 50; i++) {
+                const barHeight = 60 + Math.random() * 20;
+                const barWidth = 10;
+                const x = 100 + i * 12;
+                ctx.fillRect(x, 620, barWidth, barHeight);
+            }
+            
+            ctx.font = '14px Arial';
+            ctx.fillText(bookingData.bookingCode, canvas.width / 2 - 50, 710);
+            
+            // Footer note
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#666';
+            ctx.textAlign = 'center';
+            ctx.fillText('Bu bilet AJet Roblox rol yapma sunucusu için geçerlidir. Gerçek bir bilet değildir.', canvas.width / 2, 780);
+            ctx.fillText('This ticket is valid for AJet Roblox roleplay server only. Not a real ticket.', canvas.width / 2, 800);
+            
+            // Download the image
+            const link = document.createElement('a');
+            link.download = `AJet_Ticket_${bookingData.bookingCode}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            alert('Biletiniz indiriliyor...');
+        }
+
+        function downloadBoardingPass() {
+            const canvas = document.getElementById('boardingCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size for boarding pass
+            canvas.width = 600;
+            canvas.height = 300;
+            
+            // Background - airline colors
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, '#0d4a9e');
+            gradient.addColorStop(0.3, '#2d7bc7');
+            gradient.addColorStop(0.7, '#2d7bc7');
+            gradient.addColorStop(1, '#0d4a9e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // White content area
+            ctx.fillStyle = 'white';
+            ctx.fillRect(20, 20, canvas.width - 40, canvas.height - 40);
+            
+            // Border
+            ctx.strokeStyle = '#0d4a9e';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            
+            // Airline logo
+            ctx.fillStyle = '#0d4a9e';
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('AJet', 40, 60);
+            ctx.font = '12px Arial';
+            ctx.fillText('BOARDING PASS', 40, 80);
+            
+            // Flight info
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('FLIGHT', 40, 120);
+            ctx.font = '24px Arial';
+            ctx.fillText(`AJ${Math.floor(Math.random() * 900 + 100)}`, 40, 150);
+            
+            // Passenger info
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('PASSENGER', 200, 120);
+            ctx.font = '16px Arial';
+            ctx.fillText(bookingData.username, 200, 150);
+            
+            // From/To
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('FROM', 40, 190);
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText(bookingData.from, 40, 220);
+            
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('TO', 120, 190);
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText(bookingData.to, 120, 220);
+            
+            // Class
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('CLASS', 200, 190);
+            ctx.font = '16px Arial';
+            ctx.fillText(bookingData.class, 200, 220);
+            
+            // Time
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('TIME', 280, 190);
+            ctx.font = '16px Arial';
+            ctx.fillText(bookingData.flightTime.split(' - ')[0], 280, 220);
+            
+            // Seat
+            const seatRow = Math.floor(Math.random() * 30 + 1);
+            const seatLetter = ['A', 'B', 'C', 'D', 'E', 'F'][Math.floor(Math.random() * 6)];
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('SEAT', 360, 190);
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText(`${seatRow}${seatLetter}`, 360, 220);
+            
+            // Gate
+            const gate = ['A', 'B', 'C'][Math.floor(Math.random() * 3)] + Math.floor(Math.random() * 50 + 1);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('GATE', 440, 190);
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText(gate, 440, 220);
+            
+            // Barcode area
+            ctx.fillStyle = '#000';
+            for(let i = 0; i < 30; i++) {
+                const barHeight = 30 + Math.random() * 10;
+                const barWidth = 8;
+                const x = 40 + i * 16;
+                ctx.fillRect(x, 250, barWidth, barHeight);
+            }
+            
+            // Booking code below barcode
+            ctx.font = '12px Arial';
+            ctx.fillText(bookingData.bookingCode, 40, 290);
+            
+            // Download the image
+            const link = document.createElement('a');
+            link.download = `AJet_BoardingPass_${bookingData.bookingCode}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            alert('Boarding Pass indiriliyor...');
         }
 
         function goHome() {
@@ -1291,7 +1584,8 @@
                 class: '',
                 price: '',
                 username: '',
-                userId: ''
+                userId: '',
+                bookingCode: ''
             };
             
             // Reset UI
