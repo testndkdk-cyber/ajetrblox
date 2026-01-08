@@ -585,7 +585,7 @@
                 <button class="lang-btn" onclick="toggleLanguage()">
                     <span id="langText">🌐 TR ▼</span>
                 </button>
-                <button class="login-btn">
+                <button class="login-btn" onclick="login()">
                     <span id="loginText">Giriş Yap →</span>
                 </button>
             </div>
@@ -701,20 +701,20 @@
                 </button>
             </div>
 
-            <div class="date-selector">
-                <div class="date-card selected">
+            <div class="date-selector" id="dateSelector">
+                <div class="date-card selected" onclick="selectDate(this)">
                     <div class="date-day">08 Oca Per</div>
                     <div class="date-price">ÜCRETSİZ</div>
                 </div>
-                <div class="date-card">
+                <div class="date-card" onclick="selectDate(this)">
                     <div class="date-day">09 Oca Cum</div>
                     <div class="date-price">ÜCRETSİZ</div>
                 </div>
-                <div class="date-card">
+                <div class="date-card" onclick="selectDate(this)">
                     <div class="date-day">10 Oca Cmt</div>
                     <div class="date-price">ÜCRETSİZ</div>
                 </div>
-                <div class="date-card">
+                <div class="date-card" onclick="selectDate(this)">
                     <div class="date-day">11 Oca Paz</div>
                     <div class="date-price">ÜCRETSİZ</div>
                 </div>
@@ -821,6 +821,8 @@
                     </div>
                 </div>
             </div>
+            
+            <button class="continue-btn" onclick="goToClassSelection()" id="continueFlightBtn">Devam Et</button>
         </div>
 
         <!-- Class Selection -->
@@ -866,3 +868,440 @@
             
             <div class="booking-summary">
                 <h3 style="color: #0d4a8f; margin-bottom: 15px;" id="summaryTitle">Rezervasyon Özeti</h3>
+                <div class="summary-row">
+                    <span id="summaryRoute">Rota:</span>
+                    <span id="summaryRouteValue">-</span>
+                </div>
+                <div class="summary-row">
+                    <span id="summaryFlight">Uçuş:</span>
+                    <span id="summaryFlightValue">-</span>
+                </div>
+                <div class="summary-row">
+                    <span id="summaryClass">Sınıf:</span>
+                    <span id="summaryClassValue">-</span>
+                </div>
+                <div class="summary-row">
+                    <span id="summaryPrice">Toplam:</span>
+                    <span id="summaryPriceValue">-</span>
+                </div>
+            </div>
+            
+            <button class="continue-btn" onclick="confirmBooking()" id="confirmBtn">Rezervasyonu Onayla</button>
+        </div>
+
+        <!-- Confirmation -->
+        <div class="confirmation" id="confirmationSection">
+            <div class="success-icon">✓</div>
+            <h2 class="search-title" id="confirmationTitle">Rezervasyon Tamamlandı!</h2>
+            <p style="color: #666; margin-bottom: 30px;" id="confirmationText">
+                Uçuş rezervasyonunuz başarıyla tamamlandı. Aşağıda rezervasyon detaylarınızı görebilirsiniz.
+            </p>
+            
+            <div class="confirmation-details">
+                <div class="detail-row">
+                    <span class="detail-label" id="confirmRoute">Rota:</span>
+                    <span class="detail-value" id="confirmRouteValue">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label" id="confirmFlight">Uçuş:</span>
+                    <span class="detail-value" id="confirmFlightValue">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label" id="confirmClass">Sınıf:</span>
+                    <span class="detail-value" id="confirmClassValue">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label" id="confirmPassenger">Yolcu:</span>
+                    <span class="detail-value" id="confirmPassengerValue">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label" id="confirmUserId">User ID:</span>
+                    <span class="detail-value" id="confirmUserIdValue">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label" id="confirmPrice">Toplam:</span>
+                    <span class="detail-value" id="confirmPriceValue">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label" id="confirmCode">Rezervasyon Kodu:</span>
+                    <span class="detail-value" id="confirmCodeValue">AJ-2024-001</span>
+                </div>
+            </div>
+            
+            <div>
+                <button class="download-btn" onclick="downloadTicket()" id="downloadBtn">Bileti İndir</button>
+                <button class="skip-btn" onclick="goHome()" id="skipBtn">Ana Sayfaya Dön</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Flight data storage
+        let selectedFlight = null;
+        let selectedClass = null;
+        let selectedDate = null;
+        let bookingData = {
+            from: '',
+            to: '',
+            fromName: '',
+            toName: '',
+            flightTime: '',
+            date: '',
+            class: '',
+            price: '',
+            username: '',
+            userId: ''
+        };
+
+        // Initialize date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const nextDay = new Date(today);
+            nextDay.setDate(today.getDate() + 1);
+            
+            // Format dates for input
+            const formatDate = (date) => {
+                return date.toISOString().split('T')[0];
+            };
+            
+            document.getElementById('departureDate').value = formatDate(today);
+            document.getElementById('departureDate').min = formatDate(today);
+            
+            // Set default date cards
+            updateDateCards();
+        });
+
+        function updateDateCards() {
+            const today = new Date();
+            const dateCards = document.querySelectorAll('.date-card .date-day');
+            const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
+            const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+            
+            dateCards.forEach((card, index) => {
+                const date = new Date(today);
+                date.setDate(today.getDate() + index);
+                const dayName = days[date.getDay()];
+                const day = date.getDate();
+                const month = months[date.getMonth()];
+                card.textContent = `${day} ${month} ${dayName}`;
+            });
+        }
+
+        function toggleLanguage() {
+            const langBtn = document.getElementById('langText');
+            const currentLang = langBtn.textContent.includes('TR') ? 'TR' : 'EN';
+            
+            if (currentLang === 'TR') {
+                // Switch to English
+                langBtn.textContent = '🌐 EN ▼';
+                document.getElementById('searchTitle').textContent = 'Book Your Flight';
+                document.getElementById('fromLabel').textContent = 'FROM';
+                document.getElementById('toLabel').textContent = 'TO';
+                document.getElementById('dateLabel').textContent = 'DEPARTURE DATE';
+                document.getElementById('searchBtnText').textContent = 'Search Flights';
+                document.getElementById('loginText').textContent = 'Login →';
+                document.getElementById('editBtnText').textContent = '✎ Edit Search';
+                document.getElementById('directLabel').textContent = 'Direct Flights';
+                document.getElementById('classTitle').textContent = 'Select Class';
+                document.getElementById('eco1').textContent = '8kg Carry-on Baggage';
+                document.getElementById('eco2').textContent = '15kg Checked Baggage';
+                document.getElementById('eco3').textContent = 'Standard Seat';
+                document.getElementById('premium1').textContent = '12kg Carry-on Baggage';
+                document.getElementById('premium2').textContent = '25kg Checked Baggage';
+                document.getElementById('premium3').textContent = 'Premium Seat';
+                document.getElementById('premium4').textContent = 'Priority Boarding';
+                document.getElementById('continueClassBtn').textContent = 'Continue';
+                document.getElementById('passengerTitle').textContent = 'Passenger Information';
+                document.getElementById('usernameLabel').textContent = 'ROBLOX USERNAME';
+                document.getElementById('useridLabel').textContent = 'ROBLOX USER ID';
+                document.getElementById('summaryTitle').textContent = 'Booking Summary';
+                document.getElementById('summaryRoute').textContent = 'Route:';
+                document.getElementById('summaryFlight').textContent = 'Flight:';
+                document.getElementById('summaryClass').textContent = 'Class:';
+                document.getElementById('summaryPrice').textContent = 'Total:';
+                document.getElementById('confirmBtn').textContent = 'Confirm Booking';
+                document.getElementById('confirmationTitle').textContent = 'Booking Confirmed!';
+                document.getElementById('confirmationText').textContent = 'Your flight reservation has been successfully completed. You can view your booking details below.';
+                document.getElementById('confirmRoute').textContent = 'Route:';
+                document.getElementById('confirmFlight').textContent = 'Flight:';
+                document.getElementById('confirmClass').textContent = 'Class:';
+                document.getElementById('confirmPassenger').textContent = 'Passenger:';
+                document.getElementById('confirmUserId').textContent = 'User ID:';
+                document.getElementById('confirmPrice').textContent = 'Total:';
+                document.getElementById('confirmCode').textContent = 'Booking Code:';
+                document.getElementById('downloadBtn').textContent = 'Download Ticket';
+                document.getElementById('skipBtn').textContent = 'Return to Home';
+                document.getElementById('continueFlightBtn').textContent = 'Continue';
+            } else {
+                // Switch to Turkish
+                langBtn.textContent = '🌐 TR ▼';
+                document.getElementById('searchTitle').textContent = 'Uçuşunuzu Rezerve Edin';
+                document.getElementById('fromLabel').textContent = 'NEREDEN';
+                document.getElementById('toLabel').textContent = 'NEREYE';
+                document.getElementById('dateLabel').textContent = 'GİDİŞ TARİHİ';
+                document.getElementById('searchBtnText').textContent = 'Uçuş Ara';
+                document.getElementById('loginText').textContent = 'Giriş Yap →';
+                document.getElementById('editBtnText').textContent = '✎ Aramayı Düzenle';
+                document.getElementById('directLabel').textContent = 'Direkt Uçuşlar';
+                document.getElementById('classTitle').textContent = 'Sınıf Seçin';
+                document.getElementById('eco1').textContent = '8kg El Bagajı';
+                document.getElementById('eco2').textContent = '15kg Bagaj';
+                document.getElementById('eco3').textContent = 'Standart Koltuk';
+                document.getElementById('premium1').textContent = '12kg El Bagajı';
+                document.getElementById('premium2').textContent = '25kg Bagaj';
+                document.getElementById('premium3').textContent = 'Premium Koltuk';
+                document.getElementById('premium4').textContent = 'Öncelikli Biniş';
+                document.getElementById('continueClassBtn').textContent = 'Devam Et';
+                document.getElementById('passengerTitle').textContent = 'Yolcu Bilgileri';
+                document.getElementById('usernameLabel').textContent = 'ROBLOX KULLANICI ADI';
+                document.getElementById('useridLabel').textContent = 'ROBLOX USER ID';
+                document.getElementById('summaryTitle').textContent = 'Rezervasyon Özeti';
+                document.getElementById('summaryRoute').textContent = 'Rota:';
+                document.getElementById('summaryFlight').textContent = 'Uçuş:';
+                document.getElementById('summaryClass').textContent = 'Sınıf:';
+                document.getElementById('summaryPrice').textContent = 'Toplam:';
+                document.getElementById('confirmBtn').textContent = 'Rezervasyonu Onayla';
+                document.getElementById('confirmationTitle').textContent = 'Rezervasyon Tamamlandı!';
+                document.getElementById('confirmationText').textContent = 'Uçuş rezervasyonunuz başarıyla tamamlandı. Aşağıda rezervasyon detaylarınızı görebilirsiniz.';
+                document.getElementById('confirmRoute').textContent = 'Rota:';
+                document.getElementById('confirmFlight').textContent = 'Uçuş:';
+                document.getElementById('confirmClass').textContent = 'Sınıf:';
+                document.getElementById('confirmPassenger').textContent = 'Yolcu:';
+                document.getElementById('confirmUserId').textContent = 'User ID:';
+                document.getElementById('confirmPrice').textContent = 'Toplam:';
+                document.getElementById('confirmCode').textContent = 'Rezervasyon Kodu:';
+                document.getElementById('downloadBtn').textContent = 'Bileti İndir';
+                document.getElementById('skipBtn').textContent = 'Ana Sayfaya Dön';
+                document.getElementById('continueFlightBtn').textContent = 'Devam Et';
+            }
+        }
+
+        function login() {
+            alert('Giriş yapma özelliği henüz aktif değil. Bu bir demo sürümüdür.');
+        }
+
+        function searchFlights() {
+            const from = document.getElementById('fromAirport').value;
+            const to = document.getElementById('toAirport').value;
+            const date = document.getElementById('departureDate').value;
+            
+            if (!from || !to) {
+                alert('Lütfen kalkış ve varış havalimanlarını seçin.');
+                return;
+            }
+            
+            if (from === to) {
+                alert('Kalkış ve varış havalimanları aynı olamaz.');
+                return;
+            }
+            
+            // Get airport names
+            const fromSelect = document.getElementById('fromAirport');
+            const toSelect = document.getElementById('toAirport');
+            const fromName = fromSelect.options[fromSelect.selectedIndex].text;
+            const toName = toSelect.options[toSelect.selectedIndex].text;
+            
+            // Store booking data
+            bookingData.from = from;
+            bookingData.to = to;
+            bookingData.fromName = fromName.split(' (')[0];
+            bookingData.toName = toName.split(' (')[0];
+            
+            // Update route information
+            document.getElementById('routeTitle').textContent = `${bookingData.fromName} → ${bookingData.toName}`;
+            document.getElementById('routeDetails').textContent = `Direkt Uçuşlar | ${formatDisplayDate(date)}`;
+            
+            // Update flight locations
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`flightFrom${i}`).textContent = bookingData.fromName;
+                document.getElementById(`flightTo${i}`).textContent = bookingData.toName;
+            }
+            
+            // Show results section
+            document.getElementById('searchSection').style.display = 'none';
+            document.getElementById('resultsSection').classList.add('active');
+            
+            // Reset selections
+            selectedFlight = null;
+            selectedClass = null;
+            
+            // Update booking summary
+            updateBookingSummary();
+        }
+
+        function formatDisplayDate(dateString) {
+            const date = new Date(dateString);
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            return date.toLocaleDateString('tr-TR', options);
+        }
+
+        function editSearch() {
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('classSection').classList.remove('active');
+            document.getElementById('passengerSection').classList.remove('active');
+            document.getElementById('searchSection').style.display = 'block';
+        }
+
+        function selectDate(dateCard) {
+            // Remove selected class from all date cards
+            document.querySelectorAll('.date-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked date card
+            dateCard.classList.add('selected');
+            selectedDate = dateCard.querySelector('.date-day').textContent;
+            
+            // Update booking summary
+            updateBookingSummary();
+        }
+
+        function selectFlight(flightCard, departureTime, arrivalTime) {
+            // Remove selected class from all flight cards
+            document.querySelectorAll('.flight-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked flight card
+            flightCard.classList.add('selected');
+            selectedFlight = { departureTime, arrivalTime };
+            bookingData.flightTime = `${departureTime} - ${arrivalTime}`;
+            
+            // Update booking summary
+            updateBookingSummary();
+        }
+
+        function goToClassSelection() {
+            if (!selectedFlight) {
+                alert('Lütfen bir uçuş seçin.');
+                return;
+            }
+            
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('classSection').classList.add('active');
+        }
+
+        function selectClass(className) {
+            // Remove selected class from all class cards
+            document.querySelectorAll('.class-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked class card
+            event.currentTarget.classList.add('selected');
+            selectedClass = className;
+            
+            if (className === 'ecojet') {
+                bookingData.class = 'EcoJet';
+                bookingData.price = 'ÜCRETSİZ';
+            } else {
+                bookingData.class = 'PremiumJet';
+                bookingData.price = '25 Robux';
+            }
+            
+            // Update booking summary
+            updateBookingSummary();
+        }
+
+        function goToPassengerInfo() {
+            if (!selectedClass) {
+                alert('Lütfen bir sınıf seçin.');
+                return;
+            }
+            
+            document.getElementById('classSection').classList.remove('active');
+            document.getElementById('passengerSection').classList.add('active');
+        }
+
+        function updateBookingSummary() {
+            // Update route
+            if (bookingData.fromName && bookingData.toName) {
+                document.getElementById('summaryRouteValue').textContent = 
+                    `${bookingData.fromName} → ${bookingData.toName}`;
+            }
+            
+            // Update flight
+            if (bookingData.flightTime) {
+                document.getElementById('summaryFlightValue').textContent = bookingData.flightTime;
+            }
+            
+            // Update class and price
+            if (bookingData.class) {
+                document.getElementById('summaryClassValue').textContent = bookingData.class;
+                document.getElementById('summaryPriceValue').textContent = bookingData.price;
+            }
+        }
+
+        function confirmBooking() {
+            const username = document.getElementById('robloxUsername').value.trim();
+            const userId = document.getElementById('robloxUserId').value.trim();
+            
+            if (!username || !userId) {
+                alert('Lütfen Roblox kullanıcı adı ve User ID girin.');
+                return;
+            }
+            
+            bookingData.username = username;
+            bookingData.userId = userId;
+            
+            // Update confirmation details
+            document.getElementById('confirmRouteValue').textContent = 
+                `${bookingData.fromName} → ${bookingData.toName}`;
+            document.getElementById('confirmFlightValue').textContent = bookingData.flightTime;
+            document.getElementById('confirmClassValue').textContent = bookingData.class;
+            document.getElementById('confirmPassengerValue').textContent = bookingData.username;
+            document.getElementById('confirmUserIdValue').textContent = bookingData.userId;
+            document.getElementById('confirmPriceValue').textContent = bookingData.price;
+            
+            // Generate random booking code
+            const randomCode = `AJ-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+            document.getElementById('confirmCodeValue').textContent = randomCode;
+            
+            // Show confirmation
+            document.getElementById('passengerSection').classList.remove('active');
+            document.getElementById('confirmationSection').classList.add('active');
+        }
+
+        function downloadTicket() {
+            alert('Bilet indirme özelliği demo sürümünde aktif değil. Rezervasyon kodunuz: ' + 
+                  document.getElementById('confirmCodeValue').textContent);
+        }
+
+        function goHome() {
+            // Reset everything and go back to search
+            document.getElementById('confirmationSection').classList.remove('active');
+            document.getElementById('searchSection').style.display = 'block';
+            
+            // Reset form
+            document.getElementById('fromAirport').selectedIndex = 0;
+            document.getElementById('toAirport').selectedIndex = 0;
+            document.getElementById('robloxUsername').value = '';
+            document.getElementById('robloxUserId').value = '';
+            
+            // Reset selections
+            selectedFlight = null;
+            selectedClass = null;
+            bookingData = {
+                from: '',
+                to: '',
+                fromName: '',
+                toName: '',
+                flightTime: '',
+                date: '',
+                class: '',
+                price: '',
+                username: '',
+                userId: ''
+            };
+            
+            // Reset UI
+            document.querySelectorAll('.flight-card, .class-card, .date-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Set first date card as selected
+            document.querySelector('.date-card').classList.add('selected');
+        }
+    </script>
+</body>
+</html>
